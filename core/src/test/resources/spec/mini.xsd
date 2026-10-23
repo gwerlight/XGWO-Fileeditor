@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Eigenes Minimal-Schema nur für die Tests der Grundfunktion; hat mit einer echten Spezifikation nichts zu tun.
+     Es enthält bewusst einen Include, ein Pflichtattribut, eine Aufzählung und ein Muster. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:t="urn:fileedit:test:1"
+           targetNamespace="urn:fileedit:test:1"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="mini-types.xsd"/>
+
+    <xs:element name="rechnung">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="kopf">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="nummer" type="t:nummer"/>
+                            <xs:element name="datum" type="xs:date"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="position" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="betrag" type="xs:decimal"/>
+                            <xs:element name="rabatt" type="xs:decimal" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="art" type="t:art" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="standard" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

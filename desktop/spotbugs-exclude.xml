@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Bewusst akzeptierte SpotBugs-Funde im Desktop-Client. Jeder Eintrag braucht eine Begründung. -->
+<FindBugsFilter>
+
+    <!-- Die Oberfläche besteht aus Komponenten, die sich gegenseitig kennen (Tabs, Panels, Controller, Dialoge).
+         Dass Konstruktoren diese Objekte speichern und editor() den Editor herausgibt, ist hier die Absicht;
+         Kopien wären bei Swing-Komponenten sinnlos. -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Beenden der Anwendung nach der Rückfrage zu ungespeicherten Änderungen -->
+    <Match>
+        <Class name="de.gwerlight.xgwo.fileedit.desktop.ui.MainFrame"/>
+        <Method name="closeApplication"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+
+</FindBugsFilter>

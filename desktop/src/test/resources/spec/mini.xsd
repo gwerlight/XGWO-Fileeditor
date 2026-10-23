@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Eigenes Minimal-Schema nur für Tests der Grundfunktion; hat mit einer echten Spezifikation nichts zu tun. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:t="urn:fileedit:test:1.0"
+           targetNamespace="urn:fileedit:test:1.0"
+           elementFormDefault="qualified">
+    <xs:annotation>
+        <xs:appinfo>
+            <standard>
+                <nameKurz>Mini</nameKurz>
+            </standard>
+        </xs:appinfo>
+    </xs:annotation>
+    <xs:element name="rechnung">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="betrag" type="xs:decimal" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

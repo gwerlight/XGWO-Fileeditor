@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.gwerlight.xgwo.fileedit</groupId>
+        <artifactId>xgwo-fileedit-parent</artifactId>
+        <version>0.6.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>xgwo-fileedit-core</artifactId>
+    <name>xgwo-fileedit – Core (keine UI, kein Spring)</name>
+
+    <dependencies>
+        <!-- Schematron-Prüfung; bringt Saxon-HE (XPath 2/3) und SLF4J transitiv mit.
+             Wird erst für den SchematronCheckStep benötigt, XSD-Prüfung läuft rein mit dem JDK (JAXP). -->
+        <dependency>
+            <groupId>com.helger.schematron</groupId>
+            <artifactId>ph-schematron-schxslt</artifactId>
+        </dependency>
+
+        <!-- Tests: Spock (Groovy) auf JUnit Platform -->
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <configuration>
+                    <!-- bewusst akzeptierte Funde, jeweils mit Begründung -->
+                    <excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

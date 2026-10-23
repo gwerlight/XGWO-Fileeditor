@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t:rechnung xmlns:t="urn:fileedit:test:1" standard="Mini">
+    <t:kopf>
+        <t:nummer>EF-9999</t:nummer>
+        <t:datum>2026-03-01</t:datum>
+    </t:kopf>
+    <t:position art="dienst">
+        <t:betrag>99</t:betrag>
+        <t:rabatt>0</t:rabatt>
+    </t:position>
+</t:rechnung>

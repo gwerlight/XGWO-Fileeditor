@@ -1,0 +1,13 @@
+# Zeilenenden: Git entscheidet je Datei; im Repository liegt immer LF, auf Windows wird beim Auschecken konvertiert
+* text=auto
+
+# Skripte müssen ihre Zeilenenden behalten
+*.sh   text eol=lf
+mvnw   text eol=lf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# Binärdateien nie anfassen
+*.ico  binary
+*.png  binary
+*.jar  binary

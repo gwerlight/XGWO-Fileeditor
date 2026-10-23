@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Bewusst akzeptierte SpotBugs/find-sec-bugs-Funde in core. Jeder Eintrag braucht eine Begründung. -->
+<FindBugsFilter>
+
+    <!-- Falschalarm: Der Validator wird in XsdCheckStep.newValidator() gehärtet (FEATURE_SECURE_PROCESSING,
+         ACCESS_EXTERNAL_DTD und ACCESS_EXTERNAL_SCHEMA auf ""). find-sec-bugs erkennt das nicht, weil Erzeugung
+         und validate() in verschiedenen Methoden liegen. XXE-Tests dazu: XgwoXsdCheckSpec. -->
+    <Match>
+        <Class name="de.gwerlight.xgwo.fileedit.core.check.XsdCheckStep"/>
+        <Bug pattern="XXE_VALIDATOR"/>
+    </Match>
+
+    <!-- Die Schema- und XSL-URLs stammen aus der Konfiguration der Anwendung (Schema-Verzeichnis oder Classpath),
+         nie aus dem geprüften XML-Dokument; die Benutzereingabe bestimmt keine Adresse. -->
+    <Match>
+        <Class name="~de\.gwerlight\.xgwo\.fileedit\.core\.(check\.SchematronCheckStep|schema\.SchemaBundle)"/>
+        <Bug pattern="URLCONNECTION_SSRF_FD"/>
+    </Match>
+
+</FindBugsFilter>

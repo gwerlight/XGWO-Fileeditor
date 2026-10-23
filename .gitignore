@@ -1,0 +1,5 @@
+target/
+.idea/
+
+# Lokale Kopie einer echten Spezifikation (XSD, XSL, Beispielnachrichten) für optionale Tests; nicht Teil des Repositorys
+local-spec/
