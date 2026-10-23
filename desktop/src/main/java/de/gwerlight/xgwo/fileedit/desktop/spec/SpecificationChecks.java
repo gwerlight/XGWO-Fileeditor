@@ -47,7 +47,7 @@ public final class SpecificationChecks {
         }
         if (xsd == null || !Files.isRegularFile(xsd)) {
             problems.add("Die XSD-Datei fehlt oder existiert nicht.");
-        } else if (hasRoot(xsd, XSD_NS, Set.of("schema"))) {
+        } else if (!hasRoot(xsd, XSD_NS, Set.of("schema"))) {
             problems.add("Die XSD-Datei ist keine XML-Schema-Datei.");
         } else {
             Optional<String> namespace = targetNamespace(xsd).filter(ns -> !ns.isEmpty());
@@ -60,7 +60,7 @@ public final class SpecificationChecks {
         }
         if (xsl == null || !Files.isRegularFile(xsl)) {
             problems.add("Die Schematron-XSL fehlt oder existiert nicht (sie gehört zwingend zur Spezifikation).");
-        } else if (hasRoot(xsl, XSLT_NS, Set.of("stylesheet", "transform"))) {
+        } else if (!hasRoot(xsl, XSLT_NS, Set.of("stylesheet", "transform"))) {
             problems.add("Die Schematron-XSL ist kein XSLT-Stylesheet.");
         } else if (versionOk && declaredNamespaces(xsl).stream().noneMatch(ns -> containsVersion(ns, number))) {
             problems.add("Die Schematron-XSL deklariert keinen Namespace mit der Version " + number
@@ -177,8 +177,12 @@ public final class SpecificationChecks {
     }
 
     private static boolean hasRoot(Path file, String namespace, Set<String> localNames) {
-        return rootElement(file, r -> namespace.equals(r.getNamespaceURI()) && localNames.contains(r.getLocalName())
-            ? Optional.of(Boolean.TRUE) : Optional.empty()).isEmpty();
+        Optional<Boolean> matches = rootElement(file, r -> {
+            boolean namespaceMatches = namespace.equals(r.getNamespaceURI());
+            boolean nameMatches = localNames.contains(r.getLocalName());
+            return namespaceMatches && nameMatches ? Optional.of(Boolean.TRUE) : Optional.<Boolean>empty();
+        });
+        return matches.isPresent();
     }
 
     /** Wertet das Wurzelelement aus; leer, wenn die Datei nicht lesbar ist oder kein Wurzelelement hat. */
