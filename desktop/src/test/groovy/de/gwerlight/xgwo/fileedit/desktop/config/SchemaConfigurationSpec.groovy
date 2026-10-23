@@ -10,6 +10,8 @@ import java.nio.file.Path
 import spock.lang.Specification as SpockSpec
 import spock.lang.TempDir
 
+import java.nio.file.attribute.FileTime
+
 /** Prüft den Aufbau von Auswahl und Prüfdienst aus eingerichteten Spezifikationen, mit den eigenen Minimal-Dateien. */
 class SchemaConfigurationSpec extends SpockSpec {
 
@@ -126,7 +128,7 @@ class SchemaConfigurationSpec extends SpockSpec {
 
         when:
         Files.writeString(xsl, Files.readString(xsl).replace('le 0', 'lt -1000'))
-        Files.setLastModifiedTime(xsl, java.nio.file.attribute.FileTime.fromMillis(System.currentTimeMillis() + 5000))
+        Files.setLastModifiedTime(xsl, FileTime.fromMillis(System.currentTimeMillis() + 5000))
 
         then:
         service.check(SpecFixtures.negativeAmount()).valid

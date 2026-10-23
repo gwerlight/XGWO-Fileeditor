@@ -47,7 +47,7 @@ public final class SpecificationChecks {
         }
         if (xsd == null || !Files.isRegularFile(xsd)) {
             problems.add("Die XSD-Datei fehlt oder existiert nicht.");
-        } else if (!hasRoot(xsd, XSD_NS, Set.of("schema"))) {
+        } else if (hasRoot(xsd, XSD_NS, Set.of("schema"))) {
             problems.add("Die XSD-Datei ist keine XML-Schema-Datei.");
         } else {
             Optional<String> namespace = targetNamespace(xsd).filter(ns -> !ns.isEmpty());
@@ -60,7 +60,7 @@ public final class SpecificationChecks {
         }
         if (xsl == null || !Files.isRegularFile(xsl)) {
             problems.add("Die Schematron-XSL fehlt oder existiert nicht (sie gehört zwingend zur Spezifikation).");
-        } else if (!hasRoot(xsl, XSLT_NS, Set.of("stylesheet", "transform"))) {
+        } else if (hasRoot(xsl, XSLT_NS, Set.of("stylesheet", "transform"))) {
             problems.add("Die Schematron-XSL ist kein XSLT-Stylesheet.");
         } else if (versionOk && declaredNamespaces(xsl).stream().noneMatch(ns -> containsVersion(ns, number))) {
             problems.add("Die Schematron-XSL deklariert keinen Namespace mit der Version " + number
@@ -74,7 +74,7 @@ public final class SpecificationChecks {
      * Dateiname der XSD ohne Endung.
      */
     public static String specificationName(Path xsd) {
-        return appinfo(xsd, "standard", "nameKurz").orElseGet(() -> {
+        return appinfo(xsd).orElseGet(() -> {
             String file = xsd.getFileName().toString();
             int dot = file.lastIndexOf('.');
             return dot > 0 ? file.substring(0, dot) : file;
@@ -135,7 +135,7 @@ public final class SpecificationChecks {
      * Liest einen Wert aus dem Beschreibungsblock am Anfang der XSD:
      * {@code schema/annotation/appinfo/<group>/<element>}. Es wird nur bis zum Ende der ersten Annotation gelesen.
      */
-    private static Optional<String> appinfo(Path xsd, String group, String element) {
+    private static Optional<String> appinfo(Path xsd) {
         try (InputStream in = Files.newInputStream(xsd)) {
             XMLStreamReader r = openReader(in);
             try {
@@ -147,8 +147,8 @@ public final class SpecificationChecks {
                         if (path.size() == 2 && !"annotation".equals(path.get(1))) {
                             return Optional.empty();
                         }
-                        if (path.size() == 5 && "appinfo".equals(path.get(2)) && group.equals(path.get(3))
-                                && element.equals(path.get(4))) {
+                        if (path.size() == 5 && "appinfo".equals(path.get(2)) && "standard".equals(path.get(3))
+                                && "nameKurz".equals(path.get(4))) {
                             String text = r.getElementText().strip();
                             return text.isEmpty() ? Optional.empty() : Optional.of(text);
                         }
@@ -178,7 +178,7 @@ public final class SpecificationChecks {
 
     private static boolean hasRoot(Path file, String namespace, Set<String> localNames) {
         return rootElement(file, r -> namespace.equals(r.getNamespaceURI()) && localNames.contains(r.getLocalName())
-                ? Optional.of(Boolean.TRUE) : Optional.<Boolean>empty()).isPresent();
+            ? Optional.of(Boolean.TRUE) : Optional.empty()).isEmpty();
     }
 
     /** Wertet das Wurzelelement aus; leer, wenn die Datei nicht lesbar ist oder kein Wurzelelement hat. */

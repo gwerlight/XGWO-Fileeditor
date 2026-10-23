@@ -15,6 +15,7 @@ import java.awt.Window;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -110,7 +111,7 @@ final class SpecificationEditDialog extends JDialog {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         Optional<String> error;
         try {
-            error = SpecificationChecks.loadError(path(xsd));
+            error = SpecificationChecks.loadError(Objects.requireNonNull(path(xsd)));
         } finally {
             setCursor(Cursor.getDefaultCursor());
         }
