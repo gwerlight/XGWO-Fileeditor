@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Maven-Abhängigkeiten und Plugins (Parent-POM und Module)
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  # Versionen der Actions in .github/workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

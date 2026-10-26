@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Überholte Läufe desselben Branches bzw. Pull Requests abbrechen
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Baut core + desktop und führt die Spock-Tests (Surefire) aus
+      - name: Build und Tests
+        run: ./mvnw -B -ntp verify
+
+      - name: Surefire-Berichte
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/'
+          if-no-files-found: ignore
+
+      # HTML-Berichte der Testabdeckung (JaCoCo); der Build prüft zusätzlich die Mindestabdeckung je Modul
+      - name: JaCoCo-Berichte
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: jacoco-reports
+          path: '**/target/site/jacoco/'
+          if-no-files-found: ignore
+
+      # Ergebnis der statischen Analyse (PMD); Verstöße stehen zusätzlich als Warnungen im Build-Log
+      - name: PMD-Bericht
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pmd-report
+          path: '**/target/pmd.xml'
+          if-no-files-found: ignore
+
+      # Fehlermuster und Sicherheitsfunde (SpotBugs + find-sec-bugs)
+      - name: SpotBugs-Bericht
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: spotbugs-report
+          path: '**/target/spotbugsXml.xml'
+          if-no-files-found: ignore
+
+      # Variante 1: eine Datei, braucht ein installiertes Java 17 (oder neuer): java -jar xgwo-fileedit-desktop-*-all.jar
+      - name: Fat-JAR (Java muss installiert sein)
+        uses: actions/upload-artifact@v7
+        with:
+          name: fat-jar
+          path: desktop/target/*-all.jar
+          if-no-files-found: warn
+
+  # Variante 2: portable Fassung mit eingebauter Java-Runtime (ZIP, entpacken und XGWO-FileEditor.exe starten).
+  portable:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Profil "app-image" in desktop/pom.xml: jpackage baut den Ordner mit Programm und Runtime
+      - name: Portable Fassung erzeugen
+        run: .\mvnw.cmd -B -ntp -DskipTests -Papp-image package
+
+      - name: ZIP packen
+        shell: pwsh
+        run: Compress-Archive -Path desktop/target/dist/XGWO-FileEditor -DestinationPath XGWO-FileEditor-portable.zip
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows-portable
+          path: XGWO-FileEditor-portable.zip
