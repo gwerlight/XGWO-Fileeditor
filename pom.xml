@@ -24,7 +24,7 @@
         <!-- ph-schematron 10.0.1 ist geprüft; die übrigen Versionen bitte in IntelliJ/Maven Central auf aktuell heben -->
         <ph-schematron.version>10.2.0</ph-schematron.version>
         <flatlaf.version>3.7.2</flatlaf.version>
-        <rsyntaxtextarea.version>3.6.0</rsyntaxtextarea.version>
+        <rsyntaxtextarea.version>4.0.1</rsyntaxtextarea.version>
         <!-- Spock 2.4 gehört zu Groovy 4.x; Versionen bitte bei Gelegenheit auf aktuell heben -->
         <spock.version>2.4-M6-groovy-4.0</spock.version>
         <groovy.version>4.0.26</groovy.version>
