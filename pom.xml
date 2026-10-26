@@ -30,7 +30,7 @@
         <groovy.version>4.0.26</groovy.version>
         <gmavenplus.version>4.1.1</gmavenplus.version>
         <jacoco.version>0.8.13</jacoco.version>
-        <pmd-plugin.version>3.26.0</pmd-plugin.version>
+        <pmd-plugin.version>3.28.0</pmd-plugin.version>
         <spotbugs-plugin.version>4.9.3.0</spotbugs-plugin.version>
         <findsecbugs.version>1.14.0</findsecbugs.version>
         <!-- Mindestanteil abgedeckter Zeilen je Modul; Build schlägt in "verify" darunter fehl -->
