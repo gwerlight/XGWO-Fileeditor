@@ -6,7 +6,7 @@
 
     <groupId>de.gwerlight.xgwo.fileedit</groupId>
     <artifactId>xgwo-fileedit-parent</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>xgwo-fileedit</name>
     <url>https://github.com/gwerlight/XGWO-Fileeditor</url>
